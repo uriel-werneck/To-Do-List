@@ -13,10 +13,17 @@ class Task(db.Model):
     description = db.Column(db.String(200), nullable=False)
     completed = db.Column(db.Boolean, default=False)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'description': self.description,
+            'completed': self.completed
+        }
+
 class TodoList(Resource):
     def get(self):
         tasks = Task.query.all()
-        return [{'id': task.id, 'description': task.description, 'completed': task.completed} for task in tasks], 200
+        return [task.to_dict() for task in tasks], 200
 
     def post(self):
         data = request.get_json()
@@ -24,15 +31,14 @@ class TodoList(Resource):
         new_task = Task(description=description)
         db.session.add(new_task)
         db.session.commit()
-        return {'id': new_task.id, 'description': new_task.description, 'completed': new_task.completed}, 201
+        return new_task.to_dict(), 201
 
-# Your get, put, and delete methods in TodoItem do not check if the task exists.
 class TodoItem(Resource):
     def get(self, task_id):
         task = Task.query.get(task_id)
         if not task:
             return {'message': f'Task {task_id} not found'}, 404
-        return {'id': task.id, 'description': task.description, 'completed': task.completed}, 200
+        return task.to_dict(), 200
     
     def put(self, task_id):
         data = request.get_json()
@@ -42,7 +48,7 @@ class TodoItem(Resource):
         task.description = data.get('description', task.description)
         task.completed = data.get('completed', task.completed)
         db.session.commit()
-        return {'id': task.id, 'description': task.description, 'completed': task.completed}, 200
+        return task.to_dict(), 200
 
     def delete(self, task_id):
         task = Task.query.get(task_id)
