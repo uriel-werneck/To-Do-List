@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_restful import Api, Resource, abort
 from sqlalchemy import Column, String, Integer, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
@@ -93,30 +93,57 @@ class TodoItem(Resource):
 class UsersResource(Resource):
     def get(self):
         users = User.query.all()
-        users_schema.dump(users), 200
+        return users_schema.dump(users), 200
+
+class UserResource(Resource):
+    def get(self, user_id):
+        user = User.query.get(user_id)
+        if user:
+            return user_schema.dump(user), 200
+        else:
+            return {'message': 'User not found!'}, 400
     
+    def delete(self, user_id):
+        user = User.query.get(user_id)
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+            return {'message': 'User deleted!'}
+        else:
+            return {'message': 'User not found!'}, 400
+
+class LoginUser(Resource):
     def post(self):
         try:
             data = user_schema.load(request.get_json())
             print(data)
         except ValidationError as error:
             return error.messages, 400
-        print('registering new user')
-
-class UserResource(Resource):
-    def get(self, user_id):
-        print(f'getting user {user_id}')
-    
-    def delete(self, user_id):
-        print(f'deleting user with id: {user_id}')
-
-class LoginUser(Resource):
-    def post(self):
         return {'message': 'user logged'}
 
 class RegisterUser(Resource):
     def post(self):
-        return {'message': 'user registered'}
+        try:
+            data = request.get_json()
+            username = data['username']
+            password = data['password']
+            repeated_password = data['repeatedPassword']
+            if password == repeated_password:
+                user = User.query.filter_by(username=username).first()
+
+                if user:
+                    return {'message': 'User already registered'}, 400
+                
+                new_user = User(username=username, password=password)
+                db.session.add(new_user)
+                db.session.commit()
+
+                return {'message': f'{username} registered to the database'}, 201
+            
+            else:
+                return {'message': 'Passwords not matching'}, 400
+        except ValidationError as error:
+            return error.messages, 400
 
 api.add_resource(TodoItem, '/api/tasks/<int:task_id>')
 api.add_resource(TodoList, '/api/tasks')
