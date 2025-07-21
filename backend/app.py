@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from marshmallow import Schema, fields, ValidationError
 from marshmallow.validate import Length
 from flask_cors import CORS
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -22,7 +23,7 @@ class Task(db.Model):
 
 class User(db.Model):
     id = Column(Integer, primary_key=True)
-    username = Column(String(20), nullable=False)
+    username = Column(String(20), nullable=False, unique=True)
     password = Column(String(20), nullable=False)
     tasks = relationship('Task', backref='user')
 
@@ -134,12 +135,13 @@ class RegisterUser(Resource):
                 if user:
                     return {'message': 'User already registered'}, 400
                 
-                new_user = User(username=username, password=password)
+                hashed_password = generate_password_hash(password)
+                new_user = User(username=username, password=hashed_password)
                 db.session.add(new_user)
                 db.session.commit()
 
                 return {'message': f'{username} registered to the database'}, 201
-            
+
             else:
                 return {'message': 'Passwords not matching'}, 400
         except ValidationError as error:
