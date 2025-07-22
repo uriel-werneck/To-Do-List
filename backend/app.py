@@ -80,6 +80,15 @@ def get_task_or_404(task_id):
         abort(404, message=f'Task {task_id} not found')
     return task
 
+def generateJWT(user: User):
+    payload = {
+        'user_id': user.id,
+        'username': user.username,
+        'exp': datetime.utcnow() + timedelta(hours=5)
+    }
+    token = jwt.encode(payload, app.config['SECRET_KEY'], 'HS256')
+    return token
+
 class TodoList(Resource):
     def get(self):
         tasks = Task.query.all()
@@ -159,14 +168,7 @@ class LoginUser(Resource):
             user = User.query.filter_by(username=username).first()
 
             if user and check_password_hash(user.password, password):
-
-                payload = {
-                    'user_id': user.id,
-                    'username': username,
-                    'exp': datetime.utcnow() + timedelta(hours=5)
-                }
-                token = jwt.encode(payload, app.config['SECRET_KEY'], 'HS256')
-                
+                token = generateJWT(user)
                 return {'message': f'{username} logged in successfully', 'token': token}, 200
             else:
                 return {'message': 'Invalid username or password'}, 401
