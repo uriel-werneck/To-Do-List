@@ -7,10 +7,14 @@ from marshmallow import Schema, fields, ValidationError
 from marshmallow.validate import Length
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
+import jwt
+from datetime import datetime, timedelta
+from functools import wraps
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = 'my-secret-key'
 CORS(app)
 api = Api(app)
 db = SQLAlchemy(app)
@@ -117,7 +121,23 @@ class LoginUser(Resource):
     def post(self):
         try:
             data = user_schema.load(request.get_json())
-            print(data)
+            username = data['username'].strip()
+            password = data['password']
+            user = User.query.filter_by(username=username).first()
+
+            if user and check_password_hash(user.password, password):
+
+                payload = {
+                    'user_id': user.id,
+                    'username': username,
+                    'exp': datetime.utcnow() + timedelta(hours=5)
+                }
+                token = jwt.encode(payload, app.config['SECRET_KEY'], 'HS256')
+                
+                return {'message': f'{username} logged in successfully', 'token': token}, 200
+            else:
+                return {'message': 'Invalid username or password'}, 401
+            
         except ValidationError as error:
             return error.messages, 400
         return {'message': 'user logged'}
