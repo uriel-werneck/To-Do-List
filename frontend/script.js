@@ -1,6 +1,16 @@
 document.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+        console.log("No token found, Please log in");
+        return;
+    }
+
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/tasks");
+        const response = await fetch("http://127.0.0.1:5000/api/tasks", {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -31,7 +41,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const response = await fetch(`http://127.0.0.1:5000/api/tasks/${task.id}`, {
                         method: 'PUT',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
                         },
                         body: JSON.stringify({ completed: check.checked })
                     });
@@ -46,7 +57,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             btn.addEventListener('click', async () => {
                 try {
                     const response = await fetch(`http://127.0.0.1:5000/api/tasks/${task.id}`, {
-                        method: 'DELETE'
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
                     });
                     if (!response.ok) {
                         throw new Error('Failed to delete task.');
@@ -67,11 +81,18 @@ document.getElementById('add-task').addEventListener('click', async () => {
     const description = input.value.trim();
     if (description === '') return
 
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+        console.log('Please log in to add tasks');
+        return;
+    }
+
     try {
         const response = await fetch('http://127.0.0.1:5000/api/tasks', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ description })
         });
