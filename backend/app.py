@@ -55,7 +55,7 @@ class Task(db.Model):
 class User(db.Model):
     id = Column(Integer, primary_key=True)
     username = Column(String(20), nullable=False, unique=True)
-    password = Column(String(20), nullable=False)
+    password = Column(String(128), nullable=False)
     tasks = relationship('Task', backref='user')
 
 class TaskSchema(Schema):
@@ -67,7 +67,7 @@ class TaskSchema(Schema):
 class UserSchema(Schema):
     id = fields.Int(dump_only=True)
     username = fields.Str(required=True, validate=Length(min=5, max=25))
-    password = fields.Str(required=True, validate=Length(min=5, max=25))
+    password = fields.Str(required=True, validate=Length(min=5, max=128))
 
 task_schema = TaskSchema()
 tasks_schema = TaskSchema(many=True)
