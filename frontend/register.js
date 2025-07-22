@@ -1,3 +1,11 @@
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('access_token');
+    console.log('loaded')
+    if (token) {
+        window.location.href = 'index.html';
+    }
+});
+
 document.getElementById('register-btn').addEventListener('click', async () => {
     const username = document.getElementById('username-input').value.trim();
     const password = document.getElementById('pwd-input').value;
