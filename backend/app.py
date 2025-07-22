@@ -91,8 +91,11 @@ def generateJWT(user: User):
 
 class TodoList(Resource):
     def get(self):
-        tasks = Task.query.all()
-        return tasks_schema.dump(tasks), 200
+        @token_required
+        def inner(current_user):
+            tasks = Task.query.filter_by(user_id=current_user.id)
+            return tasks_schema.dump(tasks), 200
+        return inner()
 
     def post(self):
         @token_required
