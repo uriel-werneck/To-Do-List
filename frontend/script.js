@@ -77,6 +77,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
+document.getElementById('logout-link').addEventListener('click', () => {
+    const token = localStorage.getItem('access_token')
+    if (token) {
+        localStorage.removeItem('access_token');
+        window.location.href = 'login.html';
+    }
+});
+
 document.getElementById('add-task').addEventListener('click', async () => {
     const input = document.getElementById('task-input');
     const description = input.value.trim();
