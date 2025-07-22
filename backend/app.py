@@ -185,6 +185,7 @@ class RegisterUser(Resource):
             data = request.get_json()
             username = data['username']
             password = data['password']
+            user_schema.load({'username': username, 'password': password})
             repeated_password = data['repeatedPassword']
             if password == repeated_password:
                 user = User.query.filter_by(username=username).first()
