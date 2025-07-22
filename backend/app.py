@@ -19,6 +19,33 @@ CORS(app)
 api = Api(app)
 db = SQLAlchemy(app)
 
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if 'Authorization' in request.headers:
+            # will be in the format "Bearer <token>"
+            auth_header = request.headers['Authorization']
+            if auth_header.startswith('Bearer '):
+                token = auth_header.split(' ')[1]
+
+        if not token:
+            return {'message': 'Token is missing'}, 401
+                
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+            current_user = User.query.get(data['user_id'])
+            if not current_user:
+                return {'message': 'Token is invalid or user not found'}, 401
+        except jwt.ExpiredSignatureError:
+            return {'message': 'Token has expired'}, 401
+        except jwt.InvalidTokenError:
+            return {'message': 'Token is invalid'}, 401
+        
+        return f(current_user, *args, **kwargs)
+    
+    return decorated
+
 class Task(db.Model):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'))
@@ -59,16 +86,22 @@ class TodoList(Resource):
         return tasks_schema.dump(tasks), 200
 
     def post(self):
-        try:
-            data = task_schema.load(request.get_json())
-        except ValidationError as error:
-            return error.messages, 400
-        
-        new_task = Task(**data)
-        db.session.add(new_task)
-        db.session.commit()
+        @token_required
+        def inner(current_user):
+            try:
+                data = task_schema.load(request.get_json())
+                data['user_id'] = current_user.id
 
-        return task_schema.dump(new_task), 201
+            except ValidationError as error:
+                return error.messages, 400
+            
+            new_task = Task(**data)
+            db.session.add(new_task)
+            db.session.commit()
+
+            return task_schema.dump(new_task), 201
+        
+        return inner()
 
 class TodoItem(Resource):
     def get(self, task_id):
@@ -140,7 +173,6 @@ class LoginUser(Resource):
             
         except ValidationError as error:
             return error.messages, 400
-        return {'message': 'user logged'}
 
 class RegisterUser(Resource):
     def post(self):
