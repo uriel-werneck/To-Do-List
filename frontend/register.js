@@ -1,9 +1,9 @@
 document.getElementById('register-btn').addEventListener('click', async () => {
-    const username = document.getElementById('username-input');
-    const password = document.getElementById('pwd-input');
-    const repeatedPassword = document.getElementById('repeat-pwd-input');
+    const username = document.getElementById('username-input').value.trim();
+    const password = document.getElementById('pwd-input').value;
+    const repeatedPassword = document.getElementById('repeat-pwd-input').value;
 
-    if (password.value === repeatedPassword.value) {
+    if (password === repeatedPassword) {
         console.log('same password')
         try {
             const response = await fetch('http://127.0.0.1:5000/api/register', {
@@ -12,19 +12,17 @@ document.getElementById('register-btn').addEventListener('click', async () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    username: username.value,
-                    password: password.value,
-                    repeatedPassword: repeatedPassword.value
+                    username: username,
+                    password: password,
+                    repeatedPassword: repeatedPassword
                 })
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`)
+            if (response.ok) {
+                window.location.href='login.html';
+            } else {
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
-            const data = await response.json()
-            console.log(data);
-
         } catch (err) {
             console.error(err);
         }
