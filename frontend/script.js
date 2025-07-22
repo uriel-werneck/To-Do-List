@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem('access_token');
     if (!token) {
         console.log("No token found, Please log in");
+        window.location.href = 'login.html';
         return;
     }
 
