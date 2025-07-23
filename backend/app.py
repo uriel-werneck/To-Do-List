@@ -34,7 +34,7 @@ def token_required(f):
                 
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-            current_user = User.query.get(data['user_id'])
+            current_user = User.query.filter_by(id=data['user_id']).first()
             if not current_user:
                 return {'message': 'Token is invalid or user not found'}, 401
         except jwt.ExpiredSignatureError:
