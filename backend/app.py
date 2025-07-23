@@ -84,7 +84,7 @@ def generateJWT(user: User):
     payload = {
         'user_id': user.id,
         'username': user.username,
-        'exp': datetime.utcnow() + timedelta(hours=5)
+        'exp': datetime.now() + timedelta(hours=5)
     }
     token = jwt.encode(payload, app.config['SECRET_KEY'], 'HS256')
     return token
