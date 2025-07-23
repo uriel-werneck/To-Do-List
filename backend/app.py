@@ -10,11 +10,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
+from config import DevConfig
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'my-secret-key'
+app.config.from_object(DevConfig)
+
 CORS(app)
 api = Api(app)
 db = SQLAlchemy(app)
@@ -215,4 +215,4 @@ api.add_resource(RegisterUser, '/api/register')
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-        app.run(debug=True)
+        app.run()
