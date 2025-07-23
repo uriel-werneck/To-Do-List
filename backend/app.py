@@ -108,9 +108,7 @@ class TodoList(Resource):
         db.session.add(new_task)
         db.session.commit()
 
-            return task_schema.dump(new_task), 201
-        
-        return inner()
+        return task_schema.dump(new_task), 201
 
 class TodoItem(Resource):
     @token_required
