@@ -156,6 +156,9 @@ class UserResource(Resource):
     def delete(self, user_id):
         user = User.query.get(user_id)
         if user:
+            tasks_to_delete = Task.query.filter_by(user_id=user_id).all()
+            for task in tasks_to_delete:
+                db.session.delete(task)
             db.session.delete(user)
             db.session.commit()
             return {'message': 'User deleted!'}
