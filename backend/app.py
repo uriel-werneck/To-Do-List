@@ -75,7 +75,7 @@ user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
 def get_task_or_404(task_id):
-    task = Task.query.get(task_id)
+    task = Task.query.filter_by(id=task_id).first()
     if not task:
         abort(404, message=f'Task {task_id} not found')
     return task
