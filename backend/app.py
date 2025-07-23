@@ -42,7 +42,7 @@ def token_required(f):
         except jwt.InvalidTokenError:
             return {'message': 'Token is invalid'}, 401
         
-        return f(current_user, *args, **kwargs)
+        return f(*args, current_user, **kwargs)
     
     return decorated
 
@@ -90,38 +90,42 @@ def generateJWT(user: User):
     return token
 
 class TodoList(Resource):
-    def get(self):
-        @token_required
-        def inner(current_user):
-            tasks = Task.query.filter_by(user_id=current_user.id)
-            return tasks_schema.dump(tasks), 200
-        return inner()
+    @token_required
+    def get(self, current_user):
+        tasks = Task.query.filter_by(user_id=current_user.id).all()
+        return tasks_schema.dump(tasks), 200
 
-    def post(self):
-        @token_required
-        def inner(current_user):
-            try:
-                data = task_schema.load(request.get_json())
-                data['user_id'] = current_user.id
+    @token_required
+    def post(self, current_user):
+        try:
+            data = task_schema.load(request.get_json())
+            data['user_id'] = current_user.id
 
-            except ValidationError as error:
-                return error.messages, 400
-            
-            new_task = Task(**data)
-            db.session.add(new_task)
-            db.session.commit()
+        except ValidationError as error:
+            return error.messages, 400
+        
+        new_task = Task(**data)
+        db.session.add(new_task)
+        db.session.commit()
 
             return task_schema.dump(new_task), 201
         
         return inner()
 
 class TodoItem(Resource):
-    def get(self, task_id):
+    @token_required
+    def get(self, current_user, task_id):
         task = get_task_or_404(task_id)
-        return task_schema.dump(task), 200
+        if task.user_id == current_user.id:
+            return task_schema.dump(task), 200
+        return {'message': 'Cannot access this task'}, 403
     
-    def put(self, task_id):
+    @token_required
+    def put(self, current_user, task_id):
         task = get_task_or_404(task_id)
+
+        if task.user_id != current_user.id:
+            return {'message': 'Cannot update this task'}, 403
         
         try:
             data = task_schema.load(request.get_json(), partial=True)
@@ -134,27 +138,40 @@ class TodoItem(Resource):
         db.session.commit()
         return task_schema.dump(task), 200
 
-    def delete(self, task_id):
+    @token_required
+    def delete(self, current_user, task_id):
         task = get_task_or_404(task_id)
-        db.session.delete(task)
-        db.session.commit()
-        return '', 204
+
+        if task.user_id == current_user.id:
+            db.session.delete(task)
+            db.session.commit()
+            return '', 204
+        return {'message': 'Cannot delete this task'}, 403
 
 class UsersResource(Resource):
-    def get(self):
+    @token_required
+    def get(self, current_user):
         users = User.query.all()
+        user = User.query.filter_by(id=current_user.id).first()
         return users_schema.dump(users), 200
 
 class UserResource(Resource):
-    def get(self, user_id):
-        user = User.query.get(user_id)
+    @token_required
+    def get(self, current_user, user_id):
+        if current_user.id != user_id:
+            return {'message': 'Cannot access this user info'}, 403
+        
+        user = User.query.filter_by(id=user_id).first()
         if user:
             return user_schema.dump(user), 200
         else:
             return {'message': 'User not found!'}, 400
     
-    def delete(self, user_id):
-        user = User.query.get(user_id)
+    @token_required
+    def delete(self, current_user, user_id):
+        if current_user.id != user_id:
+            return {'message': 'Cannot delete this user'}, 403
+        user = User.query.filter_by(id=user_id).first()
         if user:
             tasks_to_delete = Task.query.filter_by(user_id=user_id).all()
             for task in tasks_to_delete:
