@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from flask_restful import Api, Resource, abort
 from sqlalchemy import Column, String, Integer, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
@@ -11,6 +11,7 @@ import jwt
 from datetime import datetime, timedelta
 from functools import wraps
 from config import DevConfig
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.config.from_object(DevConfig)
@@ -18,6 +19,7 @@ app.config.from_object(DevConfig)
 CORS(app)
 api = Api(app)
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 def token_required(f):
     @wraps(f)
@@ -231,6 +233,4 @@ api.add_resource(LoginUser, '/api/login')
 api.add_resource(RegisterUser, '/api/register')
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        app.run()
+    app.run()
