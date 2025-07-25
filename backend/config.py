@@ -11,5 +11,5 @@ class Config:
 class DevConfig(Config):
     DEBUG = True
 
-class ProduConfig(Config):
+class ProdConfig(Config):
     DEBUG = False
