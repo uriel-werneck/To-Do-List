@@ -1,4 +1,7 @@
 .env
 *.pyc
 .venv
-instance/
+backend/instance/*.db
+.flaskenv
+migrations/__pycache__
+migrations/versions/__pycache__
