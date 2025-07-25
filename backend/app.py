@@ -231,6 +231,3 @@ api.add_resource(UserResource, '/api/users/<int:user_id>')
 api.add_resource(UsersResource, '/api/users')
 api.add_resource(LoginUser, '/api/login')
 api.add_resource(RegisterUser, '/api/register')
-
-if __name__ == '__main__':
-    app.run()
