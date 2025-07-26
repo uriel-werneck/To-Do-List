@@ -1,7 +1,7 @@
 .env
 *.pyc
 .venv
+.flaskenv
 backend/instance/*.db
 backend/migrations/__pycache__
 backend/migrations/versions/__pycache__
-.flaskenv
