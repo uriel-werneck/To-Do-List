@@ -12,8 +12,10 @@ from datetime import datetime, timedelta
 from functools import wraps
 from config import DevConfig
 from flask_migrate import Migrate
+import os
 
-app = Flask(__name__)
+instance_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'instance'))
+app = Flask(__name__, instance_path=instance_path)
 app.config.from_object(DevConfig)
 
 CORS(app)
@@ -231,3 +233,6 @@ api.add_resource(UserResource, '/api/users/<int:user_id>')
 api.add_resource(UsersResource, '/api/users')
 api.add_resource(LoginUser, '/api/login')
 api.add_resource(RegisterUser, '/api/register')
+
+if __name__ == '__main__':
+    app.run()
