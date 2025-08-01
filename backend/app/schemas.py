@@ -3,7 +3,7 @@ from marshmallow.validate import Length
 
 class TaskSchema(Schema):
     id = fields.Int(dump_only=True)
-    # user_id = fields.Int(load_only=True)
+    user_id = fields.Int(load_only=True)
     description = fields.Str(required=True, validate=Length(min=1))
     completed = fields.Bool(load_default=False)
 
