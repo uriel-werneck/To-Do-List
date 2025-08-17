@@ -1,8 +1,3 @@
-/* Use <div> or alert() to show errors
-Disable buttons, show spinners, or change button text during an ongoing request
-to prevent multiple clicks and inform the user.
-*/
-
 document.getElementById('login-form').addEventListener('submit', async (event) => {
     event.preventDefault(); // prevent form from submitting the default way
 
@@ -40,7 +35,6 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
         if (response.ok) {
             // Login successful
             localStorage.setItem('access_token', data.token);
-            // Optional: show a success message before redirecting
             messageContainer.textContent = 'Login successful!';
             messageContainer.classList.add('active', 'success');
             
@@ -51,7 +45,6 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
 
         } else {
             // Login failed, display the specific error message from the server
-            // The `data.message` is an assumption of how your API responds
             const errorMessage = data.message || 'An unexpected error occurred. Please try again.';
             messageContainer.textContent = errorMessage;
             messageContainer.classList.add('active', 'error');
