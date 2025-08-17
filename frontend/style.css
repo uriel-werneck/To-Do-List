@@ -318,3 +318,46 @@ body {
     font-size: 2rem;
   }
 }
+
+/* Add this to your style.css file for the index page */
+
+.message-container {
+    /* Position it at the top-left corner */
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    
+    /* Set width and other styles */
+    max-width: 300px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 1000; /* Ensure it's on top of other elements */
+    
+    /* Start with a transparent background and hidden state */
+    background-color: transparent;
+    visibility: hidden; 
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Style for active messages */
+.message-container.active {
+    background-color: #fff;
+    visibility: visible;
+    opacity: 1;
+    border: 1px solid #f2f2f2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.message-container.error {
+    color: #d32f2f;
+}
+
+.message-container.success {
+    color: #388e3c;
+}
+
+/* Your existing styles for the body, header, main-container, etc., will go here */
