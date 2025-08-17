@@ -1,8 +1,3 @@
-/*
- * This is a unified stylesheet for the entire application:
- * login.html, register.html, and index.html (the todo app).
- */
-
 /* Font import from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
@@ -36,12 +31,10 @@ body {
   color: var(--text-color);
   min-height: 100vh;
   padding: 20px;
-  /* The body will now allow all content to flow from the top down. */
   display: block;
 }
 
 /* --- Login/Register Container Styling --- */
-/* These styles will perfectly center the login and register forms */
 .login-container, .register-container {
   background-color: var(--card-background);
   padding: 40px;
@@ -50,7 +43,6 @@ body {
   width: 100%;
   max-width: 400px;
   text-align: left;
-  /* This is the new centering technique */
   position: absolute;
   top: 50%;
   left: 50%;
@@ -319,8 +311,6 @@ body {
   }
 }
 
-/* Add this to your style.css file for the index page */
-
 .message-container {
     /* Position it at the top-left corner */
     position: fixed;
@@ -334,7 +324,7 @@ body {
     text-align: center;
     font-size: 14px;
     font-weight: 500;
-    z-index: 1000; /* Ensure it's on top of other elements */
+    z-index: 1000;
     
     /* Start with a transparent background and hidden state */
     background-color: transparent;
@@ -359,5 +349,3 @@ body {
 .message-container.success {
     color: #388e3c;
 }
-
-/* Your existing styles for the body, header, main-container, etc., will go here */
