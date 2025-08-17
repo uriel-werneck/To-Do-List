@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +7,24 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <a id="logout-link" href="">logout</a>
-        <h1>Todo-App</h1>
-        <input type="text" placeholder="Add a new task" id="task-input">
-        <button id="add-task">Add</button>
-        <hr>
-        <ul id="task-list"></ul>
+        <header class="header">
+            <h1 class="app-title">Todo-App</h1>
+            <a id="logout-link" class="logout-btn" href="#">Logout</a>
+        </header>
+
+        <main class="main-container">
+            <section class="task-input-section">
+                <input type="text" placeholder="Add a new task" id="task-input" class="task-input">
+                <button id="add-task" class="add-task-btn">Add</button>
+            </section>
+
+            <hr class="divider">
+
+            <section class="task-list-section">
+                <ul id="task-list" class="task-list"></ul>
+            </section>
+        </main>
+
         <script src="script.js"></script>
     </body>
 </html>
