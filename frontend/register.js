@@ -1,12 +1,6 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    const token = localStorage.getItem('access_token');
-    console.log('loaded')
-    if (token) {
-        window.location.href = 'index.html';
-    }
-});
+document.getElementById('register-form').addEventListener('submit', async (event) => {
+    event.preventDefault(); // 🔴 stop the default form submission
 
-document.getElementById('register-btn').addEventListener('click', async () => {
     const username = document.getElementById('username-input').value.trim();
     const password = document.getElementById('pwd-input').value;
     const repeatedPassword = document.getElementById('repeat-pwd-input').value;
@@ -27,7 +21,7 @@ document.getElementById('register-btn').addEventListener('click', async () => {
             });
 
             if (response.ok) {
-                window.location.href='login.html';
+                window.location.href = 'login.html';
             } else {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -37,4 +31,4 @@ document.getElementById('register-btn').addEventListener('click', async () => {
     } else {
         alert('Passwords must be the same!');
     }
-})
+});
