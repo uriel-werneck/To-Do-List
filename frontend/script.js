@@ -11,7 +11,6 @@ const showMessage = (message, type) => {
 document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem('access_token');
     if (!token) {
-        // You can add a message here before redirecting, but it will be very quick
         window.location.href = 'login.html';
         return;
     }
@@ -149,7 +148,6 @@ document.getElementById('add-task').addEventListener('click', async () => {
         
         if (response.ok) {
             const newTask = await response.json();
-            // Assuming your server returns the new task, you can add it to the list
             const list = document.getElementById('task-list');
             const li = document.createElement("li");
             li.classList.add("task-item");
@@ -157,8 +155,8 @@ document.getElementById('add-task').addEventListener('click', async () => {
             span.textContent = newTask.description;
             span.classList.add("task-text");
             li.appendChild(span);
+            
             // Re-create the checkbox and delete button with event listeners
-            // (You can refactor this into a function to avoid repeating code)
             list.appendChild(li);
             input.value = ""; // Clear input after adding
             showMessage('Task added successfully!', 'success');
