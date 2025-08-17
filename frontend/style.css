@@ -1,4 +1,320 @@
-.completed {
-    text-decoration: line-through;
-    color: #888;
+/*
+ * This is a unified stylesheet for the entire application:
+ * login.html, register.html, and index.html (the todo app).
+ */
+
+/* Font import from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+/* CSS variables for easy theme customization */
+:root {
+  --primary-color: #4CAF50;
+  --primary-hover-color: #45a049;
+  --secondary-color: #f44336;
+  --secondary-hover-color: #e53935;
+  --blue-color: #1a73e8;
+  --blue-hover-color: #1663c7;
+  --background-color: #f0f2f5;
+  --card-background: #ffffff;
+  --text-color: #333333;
+  --text-color-light: #666666;
+  --link-color: var(--blue-color);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --border-color: #e0e0e0;
+}
+
+/* Global reset for consistent box model and spacing */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  padding: 20px;
+  /* The body will now allow all content to flow from the top down. */
+  display: block;
+}
+
+/* --- Login/Register Container Styling --- */
+/* These styles will perfectly center the login and register forms */
+.login-container, .register-container {
+  background-color: var(--card-background);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px var(--shadow-color);
+  width: 100%;
+  max-width: 400px;
+  text-align: left;
+  /* This is the new centering technique */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* The todo app container remains aligned at the top */
+.main-container {
+  background-color: var(--card-background);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px var(--shadow-color);
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+  text-align: left;
+}
+
+/* --- Login/Register Title and Form Styling --- */
+.login-title, .register-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.login-form, .register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+  border-color: var(--primary-color);
+}
+
+/* --- Login/Register Button and Link Styling --- */
+.login-btn, .register-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Specific styling for the login button to make it blue */
+.login-btn {
+  background-color: var(--blue-color);
+}
+
+.login-btn:hover {
+  background-color: var(--blue-hover-color);
+  transform: translateY(-2px);
+}
+
+/* Specific styling for the register button to keep it green */
+.register-btn {
+  background-color: var(--primary-color);
+}
+
+.register-btn:hover {
+  background-color: var(--primary-hover-color);
+  transform: translateY(-2px);
+}
+
+.login-btn:active, .register-btn:active {
+  transform: translateY(0);
+}
+
+.login-link, .register-link {
+  margin-top: 24px;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.login-link a, .register-link a {
+  color: var(--link-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: text-decoration 0.3s ease;
+}
+
+.login-link a:hover, .register-link a:hover {
+  text-decoration: underline;
+}
+
+/* --- Todo App Header Styling --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: var(--primary-color);
+  color: white;
+  margin: 0 auto 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px var(--shadow-color);
+  width: 100%;
+  max-width: 600px;
+}
+
+.app-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.logout-btn {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid white;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* --- Task Input Section Styling --- */
+.task-input-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.task-input {
+  flex-grow: 1;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.task-input:focus {
+  border-color: var(--primary-color);
+}
+
+.add-task-btn {
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-task-btn:hover {
+  background-color: var(--primary-hover-color);
+}
+
+/* --- Task List and Items Styling --- */
+.divider {
+  border: 0;
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 20px 0;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s ease;
+}
+
+.task-item:last-child {
+  border-bottom: none;
+}
+
+.task-item:hover {
+  background-color: #f9f9f9;
+}
+
+.task-text {
+  flex-grow: 1;
+  margin-right: 10px;
+  font-size: 1.1rem;
+}
+
+.task-checkbox {
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background-color: transparent;
+  color: var(--secondary-color);
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.delete-btn:hover {
+  color: var(--secondary-hover-color);
+  transform: scale(1.1);
+}
+
+/* Style for completed tasks */
+.completed .task-text {
+  text-decoration: line-through;
+  color: var(--text-color-light);
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container, .register-container, .main-container {
+    padding: 30px 20px;
+  }
+
+  .login-title, .register-title, .app-title {
+    font-size: 2rem;
+  }
 }
