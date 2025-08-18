@@ -1,6 +1,6 @@
 # 📝 To-Do-List
 
-Este é um projeto full stack de lista de tarefas, desenvolvido com **Flask** no backend e **HTML, CSS e JavaScript** no frontend. O objetivo é fornecer um sistema simples e funcional para gerenciar tarefas, com autenticação de usuários e persistência em banco de dados.
+Este é um projeto full stack de lista de tarefas, desenvolvido com **Flask** no backend e **HTML, CSS e JavaScript** no frontend.
 
 ## ✅ Funcionalidades
 
